@@ -11,20 +11,16 @@ namespace Assets.Scripts
         private void Awake()
         {
             base.Awake();
-
-            targetTag = "Player";
         }
 
         private void OnTriggerStay2D(Collider2D collision)
         {
             if (collision.gameObject.CompareTag(targetTag))
             {
-                Debug.Log("Collision player");
                 if (canAttack)
                 {
                     collision.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
                     //Todo: play animation?
-                    Debug.Log("attacking");
 
                     StartCoroutine(SetAttackCooldown());
                 }
