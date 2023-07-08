@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [RequireComponent(typeof(Stats))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
         [SerializeField]
@@ -32,7 +33,7 @@ namespace Assets.Scripts
             OnPlayerDeath -= PlayerDeath;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage)
         {
             health = health - damage;
 
