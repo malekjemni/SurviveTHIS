@@ -14,7 +14,7 @@ namespace Assets.Scripts
         private Stats stats;
 
         public event Action OnMobDeath;
-        public static event Action OnAnyMobDeath;
+        public static event Action<int> OnAnyMobDeath;
 
         private void Awake()
         {
@@ -43,15 +43,14 @@ namespace Assets.Scripts
             if(health <= 0)
             {
                 OnMobDeath?.Invoke();
-                OnAnyMobDeath?.Invoke();
+                OnAnyMobDeath?.Invoke(stats.level);
             }
         }
 
         private void MobDeath()
         {
-            Debug.Log($"this mob died: {gameObject.name}");
+            Destroy(gameObject);
             //Todo: play death anim and effects
-            //Todo: add xp to player
         }
     }
 }

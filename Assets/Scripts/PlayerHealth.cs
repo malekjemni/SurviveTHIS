@@ -25,12 +25,13 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             OnPlayerDeath += PlayerDeath;
-            //Todo: onlevelup += UpdateHealth;
+            PlayerLevelManager.OnLevelUp += UpdateHealth;
         }
 
         private void OnDisable()
         {
             OnPlayerDeath -= PlayerDeath;
+            PlayerLevelManager.OnLevelUp -= UpdateHealth;
         }
 
         public void TakeDamage(float damage)
