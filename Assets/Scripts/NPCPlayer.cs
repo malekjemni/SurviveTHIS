@@ -1,6 +1,7 @@
 using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -21,15 +22,13 @@ public class NPCPlayer : MonoBehaviour
     private float stepBackDistance = 2f; 
     private float minLerpTime = 1f; 
     private float maxLerpTime = 1.5f;
-
-    private SpriteRenderer spriteRenderer;
+    private Vector2 previousPosition;
 
 
     private void Awake()
     {
         destinationSetter = GetComponent<AIDestinationSetter>();
         nPCPlayerBehaviour = GetComponent<NPCPlayerBehaviour>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();  
     }
 
     private void Update()
@@ -37,6 +36,7 @@ public class NPCPlayer : MonoBehaviour
 
         if (!CheckForEnemy()) Moving();
 
+        MoveDirection();
         ReachEnemy();
     }
 
@@ -90,11 +90,17 @@ public class NPCPlayer : MonoBehaviour
     }
 
 
+    private void MoveDirection()
+    {
+        Vector2 currentPosition = transform.position;
+        Vector2 movementDirection = currentPosition - previousPosition;
+        previousPosition = currentPosition;
+        transform.localScale = new Vector3(-Mathf.Sign(movementDirection.x), transform.localScale.y, transform.localScale.z);
+    }
 
     private void Moving()
     {
         if (!wkSet) LookForNodes();
-
         if (wkSet)
         {
             nPCPlayerBehaviour.MoveAnimaton(true);
@@ -102,18 +108,6 @@ public class NPCPlayer : MonoBehaviour
             destination.position = wkPoint;
             destinationSetter.target = destination;
 
-            // Turn towards movement direction
-            Vector2 movementDirection = (wkPoint - transform.position).normalized;
-            float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
-            if (angle > 90f || angle < -90f)
-            {
-                // Flip the sprite if the angle is outside the range of -90 to 90 degrees
-                spriteRenderer.flipX = true;
-            }
-            else
-            {
-                spriteRenderer.flipX = false;
-            }
         }
 
         Vector3 dist = transform.position - wkPoint;
@@ -122,18 +116,8 @@ public class NPCPlayer : MonoBehaviour
             destinationSetter.target = null;
             wkSet = false;
         }
+
     }
-
-    private void TurnTowardsMovementDirection(Vector2 movementDirection)
-    {
-        if (movementDirection != Vector2.zero)
-        {
-            float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        }
-    }
-
-
 
     private void LookForNodes()
     {
