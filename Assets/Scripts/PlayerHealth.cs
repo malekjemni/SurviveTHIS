@@ -5,15 +5,26 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [RequireComponent(typeof(Stats))]
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
-        public int health;
+        [SerializeField]
+        public float maxHealth = 100;
+        public float health;
+
+        private Stats stats;
 
         public static event Action OnPlayerDeath;
+
+        private void Awake()
+        {
+            stats = GetComponent<Stats>();
+        }
 
         private void OnEnable()
         {
             OnPlayerDeath += PlayerDeath;
+            //Todo: onlevelup += UpdateHealth;
         }
 
         private void OnDisable()
@@ -24,10 +35,21 @@ namespace Assets.Scripts
         public void TakeDamage(int damage)
         {
             health = health - damage;
+
             if (health <= 0)
             {
                 OnPlayerDeath?.Invoke();
             }
+            if(health > maxHealth)
+            {
+                health = maxHealth;
+            }
+        }
+
+        public void UpdateHealth(int level)
+        {
+            maxHealth *= stats.healthMultiplier;
+            health *= stats.healthMultiplier;
         }
 
         public void PlayerDeath()
