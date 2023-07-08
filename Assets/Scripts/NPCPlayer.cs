@@ -1,43 +1,51 @@
 using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 
 public class NPCPlayer : MonoBehaviour
 {
-    public float detectionRadius = 5f; 
-    public LayerMask enemyLayer;
+    public float detectionRadius = 5f;
     private AIDestinationSetter destinationSetter;
     private NPCPlayerBehaviour nPCPlayerBehaviour;
 
-    public LayerMask obstacleL;
+    public LayerMask obstacleL, enemyLayer;
     public Transform patrolPoint;
     public Vector3 wkPoint;
     private bool wkSet;
     public float lkpoints;
 
-
-    private float stepBackDistance = 2f; 
-    private float minLerpTime = 1f; 
-    private float maxLerpTime = 1.5f;
     private Vector2 previousPosition;
+
+
+    public float checkCirleRadius;
+    public bool canAttack = false;
+    public float attackCD;
+
+    private bool isAttacking = false;
+
+    public Transform closestEnemy = null;
+    public Transform destination = null;
 
 
     private void Awake()
     {
         destinationSetter = GetComponent<AIDestinationSetter>();
         nPCPlayerBehaviour = GetComponent<NPCPlayerBehaviour>();
+        destination = new GameObject("FollowPoint").transform;
+
     }
 
     private void Update()
     {
 
         if (!CheckForEnemy()) Moving();
+        else ReachEnemy();
 
         MoveDirection();
-        ReachEnemy();
     }
 
     private bool CheckForEnemy()
@@ -45,37 +53,88 @@ public class NPCPlayer : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, enemyLayer);
         if (colliders.Length > 0)
         {
+            
+            float minDistance = Mathf.Infinity;
+
             foreach (Collider2D collider in colliders)
             {
-                destinationSetter.target = collider.transform;
+                float distance = Vector2.Distance(transform.position, collider.transform.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestEnemy = collider.transform;
+                }
+            }
+
+            if (closestEnemy != null)
+            {
+                destinationSetter.target = closestEnemy;
+                nPCPlayerBehaviour.MoveAnimaton(true);
                 return true;
             }
         }
+
         return false;
     }
 
 
+
     private void ReachEnemy()
     {
-        if (CheckForEnemy())
+        Vector3 dist = transform.position - destinationSetter.target.position;
+        if (dist.magnitude < checkCirleRadius)
         {
-            Vector3 dist = transform.position - destinationSetter.target.position;
-            if (dist.magnitude < 1f)
+            if (canAttack)
             {
-                Vector3 direction = dist.normalized;
-                Vector3 targetPosition = transform.position + direction * stepBackDistance;
-
-                float lerpTime = Random.Range(minLerpTime, maxLerpTime);
+                StartCoroutine(AttackSequence());
+                // perform attck here
                 nPCPlayerBehaviour.AttackAnimaton();
-                StartCoroutine(MoveBackSmoothly(targetPosition, lerpTime));
+                
             }
+            else
+            {
+                EscapeFormTarget();
+            }
+                
+
+        }
+
+    }
+    private void EscapeFormTarget()
+    {
+        Vector3 enemyPosition = destinationSetter.target.position;
+        Vector3 oppositeDestination = transform.position - (enemyPosition - transform.position);
+        destination.position = oppositeDestination;
+        destinationSetter.target = destination;
+        nPCPlayerBehaviour.MoveAnimaton(true);
+
+    }
+    private IEnumerator AttackSequence()
+    {
+        if (!isAttacking)
+        {
+            isAttacking = true;
+
+        
+            nPCPlayerBehaviour.AttackAnimaton();
+
+            // Wait for the attack animation to finish
+            yield return new WaitForSeconds(attackCD);
+            canAttack = false;
+
+            float lerpTime = Random.Range(0.1f, 0.5f);
+            Vector3 dist = transform.position - destinationSetter.target.position;
+            Vector3 direction = dist.normalized;
+            Vector3 targetPosition = transform.position + direction * 0.1f;
+            StartCoroutine(MoveBackSmoothly(targetPosition, lerpTime));
+
+            isAttacking = false;
         }
     }
-
+  
     private IEnumerator MoveBackSmoothly(Vector3 targetPosition, float lerpTime)
     {
         Vector3 startPosition = transform.position;
-
         float elapsedTime = 0f;
         while (elapsedTime < lerpTime)
         {
@@ -103,8 +162,7 @@ public class NPCPlayer : MonoBehaviour
         if (!wkSet) LookForNodes();
         if (wkSet)
         {
-            nPCPlayerBehaviour.MoveAnimaton(true);
-            Transform destination = patrolPoint;
+            nPCPlayerBehaviour.MoveAnimaton(true);          
             destination.position = wkPoint;
             destinationSetter.target = destination;
 
@@ -113,7 +171,6 @@ public class NPCPlayer : MonoBehaviour
         Vector3 dist = transform.position - wkPoint;
         if (dist.magnitude < 1f)
         {
-            destinationSetter.target = null;
             wkSet = false;
         }
 
@@ -121,17 +178,19 @@ public class NPCPlayer : MonoBehaviour
 
     private void LookForNodes()
     {
+
         float randomX = Random.Range(-lkpoints, lkpoints);
-        float randomY = Random.Range(-lkpoints, lkpoints);
+        float randomY = Random.Range(-lkpoints, lkpoints); ;
 
-        Vector3 patrolPointPosition = patrolPoint.transform.position;
-        wkPoint = new Vector3(patrolPointPosition.x + randomX, patrolPointPosition.y + randomY, 0f);
+        wkPoint = new Vector3(patrolPoint.position.x + randomX, patrolPoint.position.y + randomY, 0f);
 
-        if (!Physics2D.OverlapCircle(patrolPointPosition, 0.2f, obstacleL))
+        if (!Physics2D.OverlapCircle(transform.position, 0.2f, obstacleL))
         {
             wkSet = true;
         }
     }
+
+   
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
