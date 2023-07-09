@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Mob
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - UI
   - Obstacle
   - Enemy
-  - 
+  - Effects
   - 
   - 
   - 
@@ -53,4 +54,7 @@ TagManager:
     locked: 0
   - name: Mobs
     uniqueID: 1319198571
+    locked: 0
+  - name: Effects
+    uniqueID: 1247456195
     locked: 0

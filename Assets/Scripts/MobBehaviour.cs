@@ -11,6 +11,7 @@ public class MobBehaviour : MonoBehaviour
     void Awake()
     {
         animator = GetComponent<Animator>();
+        MoveAnimaton(true);
     }
     private void Update()
     {

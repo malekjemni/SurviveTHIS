@@ -1,8 +1,6 @@
+using Assets.Scripts;
 using Pathfinding;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -11,6 +9,7 @@ public class NPCPlayer : MonoBehaviour
     public float detectionRadius = 5f;
     private AIDestinationSetter destinationSetter;
     private NPCPlayerBehaviour nPCPlayerBehaviour;
+    private PlayerAttack playerAttack;
 
     public LayerMask obstacleL, enemyLayer;
     public Transform patrolPoint;
@@ -43,7 +42,7 @@ public class NPCPlayer : MonoBehaviour
     {
 
         if (!CheckForEnemy()) Moving();
-        else ReachEnemy();
+        //else ReachEnemy();
 
         MoveDirection();
     }
@@ -84,19 +83,8 @@ public class NPCPlayer : MonoBehaviour
         Vector3 dist = transform.position - destinationSetter.target.position;
         if (dist.magnitude < checkCirleRadius)
         {
-            if (canAttack)
-            {
-                StartCoroutine(AttackSequence());
-                // perform attck here
-                nPCPlayerBehaviour.AttackAnimaton();
-                
-            }
-            else
-            {
-                EscapeFormTarget();
-            }
-                
-
+            if (!playerAttack.canAttack)   EscapeFormTarget();
+                        
         }
 
     }

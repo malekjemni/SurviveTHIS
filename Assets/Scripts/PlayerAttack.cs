@@ -8,8 +8,10 @@ namespace Assets.Scripts
 {
     public class PlayerAttack : Attacker
     {
+        public GameObject swordSlice;
         private float baseDamage;
         private List<GameObject> mobsInRange = new List<GameObject>();
+
         private new void Awake()
         {
             animator = GetComponentInParent<Animator>();
@@ -52,7 +54,8 @@ namespace Assets.Scripts
                 mob.GetComponent<IDamageable>().TakeDamage(damage);
             }
 
-            //Todo: play animation?
+            animator.SetTrigger("attack");
+            Instantiate(swordSlice,transform.position,Quaternion.identity);
 
             StartCoroutine(SetAttackCooldown());
         }
