@@ -30,12 +30,12 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
-            //OnLevelUp += UpdateDamage;
+            PlayerLevelManager.OnLevelUp += UpdateDamage;
         }
 
         private void OnDisable()
         {
-            //OnLevelUp -= UpdateDamage;
+            PlayerLevelManager.OnLevelUp -= UpdateDamage;
         }
 
         private void Update()
@@ -55,7 +55,7 @@ namespace Assets.Scripts
             }
 
             animator.SetTrigger("attack");
-            Instantiate(swordSlice,transform.position,Quaternion.identity);
+            Instantiate(swordSlice,transform.position,Quaternion.identity, transform);
 
             StartCoroutine(SetAttackCooldown());
         }
