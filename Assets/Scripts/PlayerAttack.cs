@@ -47,12 +47,11 @@ namespace Assets.Scripts
         private void AttackMobs()
         {
             if (!canAttack) return;
-            if (mobsInRange.Count == 0) return;
 
-            foreach (GameObject mob in mobsInRange)
-            {
-                mob.GetComponent<IDamageable>().TakeDamage(damage);
-            }
+            //foreach (GameObject mob in mobsInRange)
+            //{
+            //    mob.GetComponent<IDamageable>().TakeDamage(damage);
+            //}
 
             animator.SetTrigger("attack");
             Instantiate(swordSlice,transform.position,Quaternion.identity, transform);
@@ -60,21 +59,21 @@ namespace Assets.Scripts
             StartCoroutine(SetAttackCooldown());
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            if (collision.gameObject.CompareTag(targetTag))
-            {
-                mobsInRange.Add(collision.gameObject);
-            }
-        }
+        //private void OnTriggerEnter2D(Collider2D collision)
+        //{
+        //    if (collision.gameObject.CompareTag(targetTag))
+        //    {
+        //        mobsInRange.Add(collision.gameObject);
+        //    }
+        //}
 
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            if (collision.gameObject.CompareTag(targetTag))
-            {
-                mobsInRange.Remove(collision.gameObject);
-            }
-        }
+        //private void OnTriggerExit2D(Collider2D collision)
+        //{
+        //    if (collision.gameObject.CompareTag(targetTag))
+        //    {
+        //        mobsInRange.Remove(collision.gameObject);
+        //    }
+        //}
 
         private void UpdateDamage(int level)
         {
