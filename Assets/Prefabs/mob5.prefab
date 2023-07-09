@@ -360,7 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMultiplier: 1
   damageMultiplier: 1
-  level: 1
+  level: 5
 --- !u!50 &5992246133020189552
 Rigidbody2D:
   serializedVersion: 4
@@ -407,8 +407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352c15adf6bf6054d9c7dd9fc72a8378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
-  attackInterval: 0
+  damage: 50
+  attackInterval: 1
 --- !u!114 &7848658510990692212
 MonoBehaviour:
   m_ObjectHideFlags: 0

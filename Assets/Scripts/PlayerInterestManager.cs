@@ -43,6 +43,9 @@ namespace Assets.Scripts
         private List<string> randomMessages;
         [SerializeField]
         private TextMeshProUGUI randomMessageTextField;
+        [SerializeField]
+        private GameObject gameOverPanel;
+        public TextMeshProUGUI PlayerFeed;
 
         public static event Action OnPlayerSatisfied;
         public static event Action OnPlayerBored;
@@ -59,7 +62,11 @@ namespace Assets.Scripts
 
             MobHealth.OnAnyMobDeath += GainInterestByKilling;
             PlayerLevelManager.OnLevelUp += LevelUpInterest;
+
+            OnGameEnd += GameEnds;
         }
+
+       
 
         private void OnDisable()
         {
@@ -70,6 +77,14 @@ namespace Assets.Scripts
 
             MobHealth.OnAnyMobDeath -= GainInterestByKilling;
             PlayerLevelManager.OnLevelUp -= LevelUpInterest;
+
+            OnGameEnd -= GameEnds;
+        }
+
+        private void GameEnds(string obj)
+        {
+          gameOverPanel.SetActive(true);
+          PlayerFeed.text = obj;
         }
 
         private void Start()
