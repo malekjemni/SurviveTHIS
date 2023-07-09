@@ -14,7 +14,8 @@ namespace Assets.Scripts
         private Stats stats;
 
         [SerializeField]
-        private ParticleSystem levelUpParticles;
+        private GameObject levelUpParticles;
+        [SerializeField] private AudioClip levelUpsound;
 
         public static event Action<int> OnLevelUp;
 
@@ -86,6 +87,9 @@ namespace Assets.Scripts
             {
                 stats.level++;
                 OnLevelUp?.Invoke(stats.level);
+                GameObject partcile = Instantiate(levelUpParticles, transform.position, Quaternion.identity,transform);
+                Destroy(partcile, 2f);
+                SoundManager.instance.PlaySound(levelUpsound);
             }
         }
     }

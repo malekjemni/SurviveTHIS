@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public float health = 30;
 
         private Stats stats;
-
+        public GameObject particles;
         public event Action OnMobDeath;
         public static event Action<int> OnAnyMobDeath;
 
@@ -49,6 +49,7 @@ namespace Assets.Scripts
 
         private void MobDeath()
         {
+            Instantiate(particles, transform.position, Quaternion.identity);
             Destroy(gameObject);
             //Todo: play death anim and effects
         }

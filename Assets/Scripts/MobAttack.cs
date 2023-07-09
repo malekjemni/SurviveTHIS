@@ -28,5 +28,18 @@ namespace Assets.Scripts
                 }
             }
         }
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag(targetTag))
+            {
+                if (canAttack)
+                {
+                    collision.gameObject.GetComponent<IDamageable>().TakeDamage(damage);
+                    //Todo: play animation?
+
+                    StartCoroutine(SetAttackCooldown());
+                }
+            }
+        }
     }
 }

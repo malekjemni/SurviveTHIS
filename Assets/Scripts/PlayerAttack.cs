@@ -9,6 +9,7 @@ namespace Assets.Scripts
     public class PlayerAttack : Attacker
     {
         public GameObject swordSlice;
+        [SerializeField] private AudioClip swordSliceSound;
         private float baseDamage;
         private List<GameObject> mobsInRange = new List<GameObject>();
 
@@ -54,6 +55,7 @@ namespace Assets.Scripts
             //}
 
             animator.SetTrigger("attack");
+            SoundManager.instance.PlaySound(swordSliceSound);
             Instantiate(swordSlice,transform.position,Quaternion.identity, transform);
 
             StartCoroutine(SetAttackCooldown());

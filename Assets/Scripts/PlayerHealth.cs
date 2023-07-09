@@ -51,7 +51,7 @@ namespace Assets.Scripts
         public void UpdateHealth(int level)
         {
             maxHealth *= stats.healthMultiplier;
-            health *= stats.healthMultiplier;
+            health = maxHealth;
         }
 
         public void PlayerDeath()

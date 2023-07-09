@@ -8,10 +8,9 @@ public class GameTutorial : MonoBehaviour
     public GameObject player;
     public GameObject[] popups;
     private int index;
-    private bool tutoEnds =false;
     void Start()
     {
-        player.GetComponent<NPCPlayer>().enabled = false;
+        Time.timeScale = System.Convert.ToInt32(false);
         popups[0].SetActive(true);
     }
 
@@ -23,6 +22,6 @@ public class GameTutorial : MonoBehaviour
         if (index < popups.Length - 1)
             popups[index + 1].SetActive(true);
         else
-            player.GetComponent<NPCPlayer>().enabled = true;
+            Time.timeScale = System.Convert.ToInt32(true);
     }
 }

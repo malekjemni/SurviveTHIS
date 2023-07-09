@@ -83,7 +83,8 @@ namespace Assets.Scripts
 
         private void GameEnds(string obj)
         {
-          gameOverPanel.SetActive(true);
+            Time.timeScale = System.Convert.ToInt32(false);
+            gameOverPanel.SetActive(true);
           PlayerFeed.text = obj;
         }
 

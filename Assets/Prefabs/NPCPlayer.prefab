@@ -15,9 +15,16 @@ GameObject:
   - component: {fileID: 20344286372813724}
   - component: {fileID: 20344286372813727}
   - component: {fileID: 20344286372813720}
+  - component: {fileID: 1195899481}
+  - component: {fileID: 1195899484}
+  - component: {fileID: 1195899479}
+  - component: {fileID: 1195899480}
+  - component: {fileID: 1195899482}
+  - component: {fileID: 1195899493}
+  - component: {fileID: 320656670316828985}
   m_Layer: 0
   m_Name: NPCPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,7 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   drawGizmos: 1
-  detailedGizmos: 0
+  detailedGizmos: 1
   startEndModifier:
     addPoints: 0
     exactStartPoint: 3
@@ -156,16 +163,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b3abd2f9b18525479252646caf58742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 10
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128
+  detectionRadius: 15
   obstacleL:
     serializedVersion: 2
     m_Bits: 64
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
   patrolPoint: {fileID: 0}
   wkPoint: {x: 0, y: 0, z: 0}
-  lkpoints: 10
+  lkpoints: 5
+  checkCirleRadius: 3
+  canAttack: 0
+  attackCD: 0
+  closestEnemy: {fileID: 0}
+  destination: {fileID: 0}
 --- !u!114 &20344286372813720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +190,128 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1490dabaded805c4a94ccc2f4d92efbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &1195899481
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!61 &1195899484
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &1195899479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1619535930f334c974c48a2044184a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthMultiplier: 1
+  damageMultiplier: 1
+  level: 1
+--- !u!114 &1195899480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e928d1d89828ccb4189788045c2a02a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+--- !u!114 &1195899482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1619535930f334c974c48a2044184a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthMultiplier: 1
+  damageMultiplier: 1
+  level: 1
+--- !u!114 &1195899493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e2737ef5ccb32440b2abfe1c5284209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentXp: 0
+  xpThreshholds: []
+  levelUpParticles: {fileID: 0}
+--- !u!114 &320656670316828985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205526177006729994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7638b0e042fe8294ea5f7dd7b4454b5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 20
+  attackInterval: 1
+  swordSlice: {fileID: 3802302459956397560, guid: 4baa9cfec753b624ea7f82508ee354a0, type: 3}
+  swordSliceSound: {fileID: 8300000, guid: 143fe836af08e2f42a2ecea71a253374, type: 3}
 --- !u!1 &1205526177163871171
 GameObject:
   m_ObjectHideFlags: 0

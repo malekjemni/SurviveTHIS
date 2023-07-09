@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     public void GameOver()
     {
         gameOverUI.SetActive(true);
-        //SoundManager.instance.PlaySound(gameOverSound);
+        SoundManager.instance.PlaySound(gameOverSound);
     }
 
     //Pause menu functions
@@ -45,12 +45,12 @@ public class UIManager : MonoBehaviour
     }
     public void ChangeSoundVolume()
     {
-      //  SoundManager.instance.ChangeSoundVolume(20);
+       SoundManager.instance.ChangeSoundVolume(20);
         //Update UI text
     }
     public void ChangeMusicVolume()
     {
-      //  SoundManager.instance.ChangeMusicVolume(20);
+        SoundManager.instance.ChangeMusicVolume(20);
         //Update UI text
     }
     public void Restart()
