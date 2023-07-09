@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -22,10 +27,28 @@ namespace Assets.Scripts
 
         [SerializeField]
         private TimeManager timeManager;
+        [SerializeField]
+        private Image playerFace;
+        [SerializeField]
+        private Sprite boredSprite;
+        [SerializeField]
+        private Sprite neutralSprite;
+        [SerializeField]
+        private Sprite kinaFunSprite;
+        [SerializeField]
+        private Sprite satisfiedSprite;
+
+        private float randomMessageTimer;
+        [SerializeField]
+        private List<string> randomMessages;
+        [SerializeField]
+        private TextMeshProUGUI randomMessageTextField;
 
         public static event Action OnPlayerSatisfied;
         public static event Action OnPlayerBored;
         public static event Action<string> OnGameEnd;
+
+        public static event Action OnPlayerInterestChanged;
 
         private void OnEnable()
         {
@@ -49,8 +72,23 @@ namespace Assets.Scripts
             PlayerLevelManager.OnLevelUp -= LevelUpInterest;
         }
 
+        private void Start()
+        {
+            OnPlayerInterestChanged?.Invoke();
+            LevelUpInterest(1);
+
+            randomMessageTimer = 60.0f;
+        }
+
         private void Update()
         {
+            randomMessageTimer -= Time.deltaTime;
+            if(randomMessageTimer < 0)
+            {
+                PlayRandomMessage();
+                randomMessageTimer = 60.0f;
+            }
+
             interestLevel += interestPerSecond * Time.deltaTime;
 
             if (interestLevel > maxInterest)
@@ -64,6 +102,16 @@ namespace Assets.Scripts
                 OnPlayerBored?.Invoke();
                 return;
             }
+
+            UpdatePlayerFace();
+        }
+
+        private void PlayRandomMessage()
+        {
+            int i = Random.Range(0, randomMessages.Count);
+
+            randomMessageTextField.text = randomMessages[i];
+
         }
 
         private void GainInterestByKilling(int level)
@@ -129,6 +177,18 @@ namespace Assets.Scripts
                 feedBack = "Alright, I had enough. This game is boring!";
 
             OnGameEnd?.Invoke(feedBack);
+        }
+
+        private void UpdatePlayerFace()
+        {
+            if (interestLevel < 0.0f)
+                playerFace.sprite = boredSprite;
+            else if (interestLevel < 50.0f)
+                playerFace.sprite = neutralSprite;
+            else if (interestLevel < 80.0f)
+                playerFace.sprite = kinaFunSprite;
+            else
+                playerFace.sprite = satisfiedSprite;
         }
     }
 }
